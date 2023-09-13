@@ -7,29 +7,7 @@ from ..enum.options import Options
 
 class TrialSpider(scrapy.Spider):
     """
-    A Scrapy spider for scraping art-related data from a website.
-
-    Attributes:
-        name (str): The name of the spider.
-        start_urls (List[str]): The list of starting URLs for the spider.
-        categories (List[str]): A list to store the categories of art items.
-
-    Methods:
-        _verify_category(categories: List[str], subcat_text: str) -> bool:
-            Check if a subcategory is valid or if there are any categories available.
-        _extract_with_css(response: scrapy.http.Response, query: str) -> str:
-            Extract data from a Scrapy response using a CSS selector.
-        _extract_dimensions(input_string: str) -> Union[None, Dict[str, float]]:
-            Extract dimensions (height and width) from a string.
-        _parse_title(art_title: str) -> Union[str, None]:
-            Parse and clean an art title.
-
-        parse(response: scrapy.http.Response, categories: List[str]):
-            Parse the main response and follow subcategory links.
-        parse_art_urls(response: scrapy.http.Response, categories: List[str]):
-            Parse art item URLs and follow pagination links.
-        parse_art(response: scrapy.http.Response, categories: List[str]):
-            Parse and extract data from individual art item pages.
+    A Scrapy spider for scraping art information from a website.
     """
 
     name = "trial"
@@ -39,14 +17,14 @@ class TrialSpider(scrapy.Spider):
     @staticmethod
     def _verify_category(categories: List[str], subcat_text: str) -> bool:
         """
-        Check if a subcategory is valid or if there are any categories available.
+        Check if the provided subcategory text is valid.
 
         Args:
-            categories (List[str]): A list of categories.
-            subcat_text (str): Text representing a subcategory.
+            categories (List[str]): List of categories.
+            subcat_text (str): Subcategory text to verify.
 
         Returns:
-            bool: True if the subcategory is valid or if categories exist, otherwise False.
+            bool: True if the subcategory text is valid, otherwise False.
         """
 
         if subcat_text in Options.categories:
@@ -57,14 +35,14 @@ class TrialSpider(scrapy.Spider):
     @staticmethod
     def _extract_with_css(response: scrapy.http.Response, query: str) -> str:
         """
-        Extract data from a Scrapy response using a CSS selector.
+        Extract content from the response using a CSS selector.
 
         Args:
-            response (scrapy.http.Response): The Scrapy response object.
-            query (str): The CSS selector query.
+            response (scrapy.http.Response): Scrapy HTTP response object.
+            query (str): CSS selector query.
 
         Returns:
-            str: Extracted data as a string.
+            str: Extracted content.
         """
 
         return response.css(query).get(default="").strip()
@@ -72,13 +50,14 @@ class TrialSpider(scrapy.Spider):
     @staticmethod
     def _extract_dimensions(input_string: str) -> Union[None, Dict[str, float]]:
         """
-        Extract dimensions (height and width) from a string.
+        Extract dimensions from an input string.
 
         Args:
-            input_string (str): The input string containing dimensions.
+            input_string (str): Input string containing dimensions.
 
         Returns:
-            Union[None, Dict[str, float]]: A dictionary containing height and width, or None if not found.
+            Union[None, Dict[str, float]]: A dictionary with 'height' and 'width' keys
+                                           or None if dimensions are not found.
         """
 
         if not input_string:
@@ -102,13 +81,13 @@ class TrialSpider(scrapy.Spider):
     @staticmethod
     def _parse_title(art_title: str) -> Union[str, None]:
         """
-        Parse and clean an art title.
+        Parse the art title.
 
         Args:
-            art_title (str): The art title to be parsed.
+            art_title (str): Art title to parse.
 
         Returns:
-            Union[str, None]: The cleaned art title or None if it cannot be cleaned.
+            Union[str, None]: Parsed art title or None if it cannot be parsed.
         """
 
         result = re.sub(r"^untitled\s*,*", "", art_title, flags=re.IGNORECASE)
@@ -116,13 +95,13 @@ class TrialSpider(scrapy.Spider):
 
         return result.strip() if result else None
 
-    def parse(self, response: scrapy.http.Response, categories=[]):
+    def parse(self, response: scrapy.http.Response, categories: List[str] = []):
         """
-        Parse the main response and follow subcategory links.
+        Parse the main page and follow subcategories.
 
         Args:
-            response (scrapy.http.Response): The Scrapy response object.
-            categories (List[str]): A list of categories.
+            response (scrapy.http.Response): Scrapy HTTP response object.
+            categories (List[str], optional): List of categories. Defaults to [].
         """
 
         subcat = response.xpath('//*[(@id = "subcats")]/div')
@@ -143,11 +122,11 @@ class TrialSpider(scrapy.Spider):
 
     def parse_art_urls(self, response: scrapy.http.Response, categories: List[str]):
         """
-        Parse art item URLs and follow pagination links.
+        Parse art URLs on a page.
 
         Args:
-            response (scrapy.http.Response): The Scrapy response object.
-            categories (List[str]): A list of categories.
+            response (scrapy.http.Response): Scrapy HTTP response object.
+            categories (List[str]): List of categories.
         """
 
         art_urls = response.xpath(
@@ -180,11 +159,11 @@ class TrialSpider(scrapy.Spider):
 
     def parse_art(self, response: scrapy.http.Response, categories: List[str]):
         """
-        Parse and extract data from individual art item pages.
+        Parse art information on a page.
 
         Args:
-            response (scrapy.http.Response): The Scrapy response object.
-            categories (List[str]): A list of categories.
+            response (scrapy.http.Response): Scrapy HTTP response object.
+            categories (List[str]): List of categories.
         """
 
         item = ArtItem()
