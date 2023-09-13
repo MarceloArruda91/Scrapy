@@ -3,6 +3,7 @@ import scrapy
 
 class ArtItem(scrapy.Item):
     """Oi"""
+
     artist = scrapy.Field()
     title = scrapy.Field()
     description = scrapy.Field()
