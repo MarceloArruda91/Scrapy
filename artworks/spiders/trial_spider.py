@@ -1,44 +1,39 @@
-# -*- coding: utf-8 -*-
-import scrapy
 import re
-from typing import List, Dict, Union
-
-
-class ArtItem(scrapy.Item):
-    artist: List[str] = scrapy.Field()
-    title: str = scrapy.Field()
-    description: str = scrapy.Field()
-    image: str = scrapy.Field()
-    url: str = scrapy.Field()
-    height: float = scrapy.Field()
-    width: float = scrapy.Field()
-    categories: List[str] = scrapy.Field()
+from typing import Dict, Union
+import scrapy
+from ..items import ArtItem
+from ..enum.options import Options
 
 
 class TrialSpider(scrapy.Spider):
+    """oi"""
     name = 'trial'
     start_urls = ['http://pstrial-2019-12-16.toscrape.com/browse/']
+    categories = []
 
-    def parse(self, response, **kwargs):
-        for subcat in response.xpath('//*[(@id = "subcats")]/div'):
-            subcat_text = subcat.css('h3::text').get()
-            if subcat_text in ["In Sunsh", "Summertime"]:
-                yield response.follow(url=subcat.css('a')[0], callback=self.parse_subcat)
+    @staticmethod
+    def _verify_category(categories, subcat_text):
+        if subcat_text in Options.categories:
+            return True
+        if categories:
+            return True
 
-    def parse_subcat(self, response):
-        # Get the categories on this page
-        subcat_text = response.css('h1::text').get().replace('Browse - ', '')
-        categories = [subcat_text]
-
+    def parse(self, response, categories):
+        """oi"""
         subcat = response.xpath('//*[(@id = "subcats")]/div')
         if subcat:
             anchors = subcat.xpath('.//a[h3]')
-            for a in anchors:
-                yield response.follow(url=a, callback=self.parse_subcat, cb_kwargs={'categories': categories.copy()})
+            for anchor in anchors:
+                subcat_text = anchor.css('::text').get()
+                if self._verify_category(categories, subcat_text):
+                    temp_list = categories.copy()
+                    temp_list.append(subcat_text)
+                    yield response.follow(url=anchor, callback=self.parse, cb_kwargs={'categories': temp_list})
 
-        yield from self.parse_art_urls(response, categories.copy())
+        yield from self.parse_art_urls(response, categories)
 
     def parse_art_urls(self, response, categories):
+        """oi"""
         art_urls = response.xpath('//*[@id="body"]/div[2]/a[contains(@href,"/item")]').css('a')
         if art_urls.get():
             yield from response.follow_all(urls=art_urls, callback=self.parse_art, cb_kwargs={'categories': categories})
@@ -54,6 +49,7 @@ class TrialSpider(scrapy.Spider):
 
     @staticmethod
     def parse_art(response, categories):
+        """oi"""
         def extract_with_css(query: str) -> str:
             return response.css(query).get(default="").strip()
 
@@ -67,16 +63,12 @@ class TrialSpider(scrapy.Spider):
 
                 if len(values) > 1:
                     return {'height': float(values[0]), 'width': float(values[2])}
-
             else:
                 return None
 
         def parse_title(art_title: str) -> Union[str, None]:
-            # Remove 'untitled' (case-insensitive) and any comma that follows it
             result = re.sub(r'^untitled\s*,*', '', art_title, flags=re.IGNORECASE)
-
-            # Remove surrounding parentheses or square brackets
-            result = re.sub(r'^(\[|\()(.+?)(\]|\))$', r'\2', result)
+            result = re.sub(r'^([\[(])(.+?)([])])$', r'\2', result)
 
             return result.strip() if result else None
 
@@ -87,9 +79,9 @@ class TrialSpider(scrapy.Spider):
             item['artist'] = [re.search(r':\s*(.*)', artist).group(1) for artist in artists if
                               re.search(r':\s*(.*)', artist)]
 
-        title = extract_with_css('h1::text')
+        title = parse_title(extract_with_css('h1::text'))
         if title:
-            item['title'] = parse_title(title)
+            item['title'] = title
 
         description = extract_with_css('p::text')
         if description:
