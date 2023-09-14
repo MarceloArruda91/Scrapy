@@ -106,15 +106,17 @@ class TrialSpider(scrapy.Spider):
         """
         item = ArtItem()
 
-        artist = self.spider_utils.extract_artist(response=response, query="h2::text")
+        artist = self.spider_utils.extract_artist(response=response)
         if artist:
             item["artist"] = artist
 
-        title = self.spider_utils.extract_title(response=response, query="h1::text")
-        if title:
-            item["title"] = title
+        title = self.spider_utils.extract_title(response=response)
+        if title["title"]:
+            item["title"] = title["title"]
 
-        description = self.spider_utils.extract_with_css(response, "p::text")
+        description = self.spider_utils.extract_description(
+            response=response, title=title
+        )
         if description:
             item["description"] = description
 
@@ -124,12 +126,7 @@ class TrialSpider(scrapy.Spider):
 
         item["url"] = response.url
 
-        dimensions_dict = self.spider_utils.extract_dimensions(
-            response=response,
-            query='//td[@class="key" and text('
-            ')="Dimensions"]/following-sibling::td[ '
-            '@class="value"]/text()',
-        )
+        dimensions_dict = self.spider_utils.extract_dimensions(response=response)
         if dimensions_dict:
             item["height"] = dimensions_dict["height"]
             item["width"] = dimensions_dict["width"]
