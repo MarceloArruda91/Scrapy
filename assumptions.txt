@@ -6,6 +6,8 @@ The spider's crawling process is limited to the h3 categories exclusively.
 
 To streamline the iteration process, I employed a recursive function, given the uniform structure of all pages.
 
+
+
 Data Treatment:
 
 Artist:

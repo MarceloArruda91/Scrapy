@@ -9,7 +9,7 @@ class SpiderUtils:
     @staticmethod
     def extract_with_css(response: scrapy.http.Response, query: str) -> str:
         """
-        Extract data from response using a CSS selector.
+        Extract data from a Scrapy response using a CSS selector.
 
         :param response: The Scrapy response object.
         :param query: The CSS selector query.
@@ -65,7 +65,6 @@ class SpiderUtils:
         Extract dimensions (height and width) from the response.
 
         :param response: The Scrapy response object.
-        :param query: The XPath query to extract dimensions.
         :return: A dictionary with 'height' and 'width' keys containing float values, or None if not found.
         """
         input_string = response.xpath(
