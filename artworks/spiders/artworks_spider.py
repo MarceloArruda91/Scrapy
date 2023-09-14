@@ -11,7 +11,7 @@ class TrialSpider(scrapy.Spider):
     A Scrapy spider for scraping art information from a website.
     """
 
-    name = "trial"
+    name = "artworks"
     start_urls = ["http://pstrial-2019-12-16.toscrape.com/browse/"]
     categories = []
 

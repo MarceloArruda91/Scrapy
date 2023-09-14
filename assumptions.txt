@@ -1,1 +1,3 @@
 # Put your assumptions here
+
+Had to change the Twisted package version to Twisted==22.10.0 to run scrapy
