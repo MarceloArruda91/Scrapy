@@ -80,7 +80,7 @@ class TrialSpider(scrapy.Spider):
             return None
 
     @staticmethod
-    def _parse_title(art_title: str) -> Union[str, None]:
+    def _extract_title(art_title: str) -> Union[str, None]:
         """
         Parse the art title.
 
@@ -177,7 +177,7 @@ class TrialSpider(scrapy.Spider):
                 if re.search(r":\s*(.*)", artist)
             ]
 
-        title = self._parse_title(self._extract_with_css(response, "h1::text"))
+        title = self._extract_title(self._extract_with_css(response, "h1::text"))
         if title:
             item["title"] = title
 

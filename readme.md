@@ -1,7 +1,7 @@
 <div align="center">
 <h1 align="center">
 
-<br>challenge
+<br>Zyte Challenge
 </h1>
 <h3>◦ Developed with the software and tools listed below.</h3>
 
@@ -76,7 +76,7 @@ Scalable: The spider can be extended to scrape artworks from additional categori
     │
     └───spiders
         │───__init__.py
-        └───trial_spider.py
+        └───artworks_spider.py
 ```
         
 
@@ -91,7 +91,7 @@ Scalable: The spider can be extended to scrape artworks from additional categori
 ### ✔️ Prerequisites
 
 Before you begin, ensure that you have the following prerequisites installed:
-> - `ℹ️ Scrapy`
+> - `Python 3.11`
 
 
 ### 📦 Installation
