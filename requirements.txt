@@ -1,0 +1,4 @@
+black==23.3.0
+isort==5.12.0
+pandas==2.0.1
+Scrapy==2.9.0
