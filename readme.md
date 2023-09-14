@@ -57,7 +57,8 @@ Structured Output: The scraped data is structured and saved in a JSON file named
 
 ## 📂 Project Structure
 ```
-│───data.json
+│───items_artworks.json
+│───log.txt
 │───scrapy.cfg
 └───artworks
     │───items.py
@@ -75,14 +76,7 @@ Structured Output: The scraped data is structured and saved in a JSON file named
     │
     └───util
         └───spider_utils.py
-```   
-        
-
-
-
-
-
----
+```
 
 ## 🚀 Getting Started
 
@@ -105,16 +99,9 @@ cd artworks
 pip install -r requirements.txt
 ```
 
-### 🎮 Using artworks
+### 🎮 Running the spider
 
 ```sh
 scrapy crawl artworks
 ```
 
----
-
-## 🗺 Roadmap
-
-> - [X] `ℹ️  Task 1: Implement X`
-> - [ ] `ℹ️  Task 2: Refactor Y`
-> - [ ] `ℹ️ ...`
