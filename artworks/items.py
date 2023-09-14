@@ -26,7 +26,9 @@ class ArtItem(scrapy.Item):
     width = scrapy.Field()
     categories = scrapy.Field()
 
-    def to_dict(self, omit_none: Optional[bool] = True) -> Dict[str, Union[str, float, list]]:
+    def to_dict(
+        self, omit_none: Optional[bool] = True
+    ) -> Dict[str, Union[str, float, list]]:
         """
         Convert the ArtItem instance to a dictionary and optionally omit None values.
 

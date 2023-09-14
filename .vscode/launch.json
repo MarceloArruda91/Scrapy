@@ -1,0 +1,17 @@
+{
+    "version": "0.1.0",
+    "configurations": [
+        {
+            "name": "Python: Launch Scrapy Spider",
+            "type": "python",
+            "request": "launch",
+            "module": "scrapy",
+            "cwd": "${workspaceFolder}/artworks/spiders",
+            "args": [
+                "runspider",
+                "artworks_spider.py"
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}

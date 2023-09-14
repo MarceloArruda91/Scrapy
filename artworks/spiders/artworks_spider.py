@@ -1,108 +1,29 @@
 import re
-from typing import Dict, Union, List
+from typing import List
 import scrapy
-
-from ..enum.options import Options
 from ..items import ArtItem
+from ..util.spider_utils import SpiderUtils
 
 
 class TrialSpider(scrapy.Spider):
     """
-    A Scrapy spider for scraping art information from a website.
+    A Scrapy spider to scrape artwork information.
     """
 
     name = "artworks"
     start_urls = ["http://pstrial-2019-12-16.toscrape.com/browse/"]
     categories = []
 
-    @staticmethod
-    def _verify_category(categories: List[str], subcat_text: str) -> bool:
-        """
-        Check if the provided subcategory text is valid.
-
-        Args:
-            categories (List[str]): List of categories.
-            subcat_text (str): Subcategory text to verify.
-
-        Returns:
-            bool: True if the subcategory text is valid, otherwise False.
-        """
-
-        if subcat_text in Options.categories:
-            return True
-        if categories:
-            return True
-
-    @staticmethod
-    def _extract_with_css(response: scrapy.http.Response, query: str) -> str:
-        """
-        Extract content from the response using a CSS selector.
-
-        Args:
-            response (scrapy.http.Response): Scrapy HTTP response object.
-            query (str): CSS selector query.
-
-        Returns:
-            str: Extracted content.
-        """
-
-        return response.css(query).get(default="").strip()
-
-    @staticmethod
-    def _extract_dimensions(input_string: str) -> Union[None, Dict[str, float]]:
-        """
-        Extract dimensions from an input string.
-
-        Args:
-            input_string (str): Input string containing dimensions.
-
-        Returns:
-            Union[None, Dict[str, float]]: A dictionary with 'height' and 'width' keys
-                                           or None if dimensions are not found.
-        """
-
-        if not input_string:
-            return None
-        match = re.search(r"\((\d[^)]+)\)", input_string)
-
-        if match:
-            values = (
-                match.group(0)
-                .replace("(", "")
-                .replace(")", "")
-                .replace("cm", "")
-                .split()
-            )
-
-            if len(values) > 1:
-                return {"height": float(values[0]), "width": float(values[2])}
-        else:
-            return None
-
-    @staticmethod
-    def _extract_title(art_title: str) -> Union[str, None]:
-        """
-        Parse the art title.
-
-        Args:
-            art_title (str): Art title to parse.
-
-        Returns:
-            Union[str, None]: Parsed art title or None if it cannot be parsed.
-        """
-
-        result = re.sub(r"^untitled\s*,*", "", art_title, flags=re.IGNORECASE)
-        result = re.sub(r"^([\[(])(.+?)([])])$", r"\2", result)
-
-        return result.strip() if result else None
+    def __init__(self):
+        super().__init__()
+        self.spider_utils = SpiderUtils()
 
     def parse(self, response: scrapy.http.Response, categories: List[str] = []):
         """
-        Parse the main page and follow subcategories.
+        Parse the response and extract subcategories and artwork URLs.
 
-        Args:
-            response (scrapy.http.Response): Scrapy HTTP response object.
-            categories (List[str], optional): List of categories. Defaults to [].
+        :param response: The response object.
+        :param categories: List of categories.
         """
 
         subcat = response.xpath('//*[(@id = "subcats")]/div')
@@ -110,11 +31,11 @@ class TrialSpider(scrapy.Spider):
             anchors = subcat.xpath(".//a[h3]")
             for anchor in anchors:
                 subcat_text = anchor.css("::text").get()
-                if self._verify_category(categories, subcat_text):
+                if self.spider_utils.verify_category(categories, subcat_text):
                     temp_list = categories.copy()
                     temp_list.append(subcat_text)
                     yield response.follow(
-                        url=anchor,
+                        url=anchor.attrib["href"],
                         callback=self.parse,
                         cb_kwargs={"categories": temp_list},
                     )
@@ -123,11 +44,10 @@ class TrialSpider(scrapy.Spider):
 
     def parse_art_urls(self, response: scrapy.http.Response, categories: List[str]):
         """
-        Parse art URLs on a page.
+        Parse the response and extract artwork URLs.
 
-        Args:
-            response (scrapy.http.Response): Scrapy HTTP response object.
-            categories (List[str]): List of categories.
+        :param response: The response object.
+        :param categories: List of categories.
         """
 
         art_urls = response.xpath(
@@ -160,15 +80,14 @@ class TrialSpider(scrapy.Spider):
 
     def parse_art(self, response: scrapy.http.Response, categories: List[str]):
         """
-        Parse art information on a page.
+        Parse the response and extract artwork information.
 
-        Args:
-            response (scrapy.http.Response): Scrapy HTTP response object.
-            categories (List[str]): List of categories.
+        :param response: The response object.
+        :param categories: List of categories.
         """
 
         item = ArtItem()
-        artists = self._extract_with_css(response, "h2::text")
+        artists = self.spider_utils.extract_with_css(response, "h2::text")
         if artists:
             artists = [artist.strip() for artist in artists.split(";")]
             item["artist"] = [
@@ -177,11 +96,13 @@ class TrialSpider(scrapy.Spider):
                 if re.search(r":\s*(.*)", artist)
             ]
 
-        title = self._extract_title(self._extract_with_css(response, "h1::text"))
+        title = self.spider_utils.extract_title(
+            self.spider_utils.extract_with_css(response, "h1::text")
+        )
         if title:
             item["title"] = title
 
-        description = self._extract_with_css(response, "p::text")
+        description = self.spider_utils.extract_with_css(response, "p::text")
         if description:
             item["description"] = description
 
@@ -193,7 +114,7 @@ class TrialSpider(scrapy.Spider):
             '//td[@class="key" and text()="Dimensions"]/following-sibling::td['
             '@class="value"]/text()'
         ).get()
-        dimensions_dict = self._extract_dimensions(dimensions)
+        dimensions_dict = self.spider_utils.extract_dimensions(dimensions)
         if dimensions_dict:
             item["height"] = dimensions_dict["height"]
             item["width"] = dimensions_dict["width"]
