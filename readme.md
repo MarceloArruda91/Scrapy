@@ -110,7 +110,7 @@ pip install -r requirements.txt
 ### 🎮 Using artworks
 
 ```sh
-scrapy crawl trial
+scrapy crawl artworks
 ```
 
 ---
