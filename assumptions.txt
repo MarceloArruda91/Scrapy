@@ -1,3 +1,20 @@
-# Put your assumptions here
+Assumptions for the Challenge
+I had to update the Twisted package version to Twisted==22.10.0 to ensure compatibility with Scrapy.
 
-Had to change the Twisted package version to Twisted==22.10.0 to run scrapy
+The spider should exclusively traverse the h3 categories during the crawling process.
+
+Since all pages adhere to a uniform structure, I opted for utilizing a recursive function to simplify the iteration process.
+
+Data Treatment:
+
+Artist:
+I processed the data to extract only the artists names, excluding their specific artist type.
+In cases where the Artist field contained "after some artist," I removed the "after some artist" portion.
+
+Title:
+I did not consider instances where the titles were marked as "untitled."
+However, if a title began with "untitled" and was followed by additional text, I removed the "untitled" part.
+
+Dimensions:
+When multiple dimensions in centimeters were present, I extracted only the first occurrence, which typically represents image/sight/plate dimensions.
+In cases with a single centimeter value, I returned None and left the field unfilled.

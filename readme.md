@@ -35,11 +35,10 @@ This project is a Scrapy spider developed as part of a hiring process challenge.
 
 Category-Based Scraping: The spider is capable of scraping artworks from specific categories, by navigating through the browse tree structure of the website. It can parse artworks at the lowest level of the tree.
 
-Data Fields Extraction: The spider extracts various fields for each artwork, including:
 
-2. **Data Fields Extraction**: The spider extracts various fields for each artwork, including:
+**Data Fields Extracted**: The spider extracts various fields for each artwork, including:
    - `url`: The URL of the work being scraped.
-   - `artist`: A list of artists associated with the work, encompassing various artistic disciplines.
+   - `artist`: A list of artists associated with the work.
    - `title`: The title of the work.
    - `image`: The URL of the artwork's image.
    - `height` and `width`: Physical dimensions in centimeters, if available.
@@ -51,10 +50,7 @@ PEP8-Compliant Code: The spider's code adheres to PEP8 standards, ensuring clean
 
 Customizable Categories: You can easily customize the categories you want to scrape by modifying the spider's configuration.
 
-Structured Output: The scraped data is structured and saved in a JSON file named "items_artworks.json," making it easy to work with and analyze.
-
-Scalable: The spider can be extended to scrape artworks from additional categories or websites, making it a scalable solution for web scraping tasks.
-
+Structured Output: The scraped data is structured and saved in a JSON file named "items_artworks.json.
 
 ---
 
@@ -72,12 +68,14 @@ Scalable: The spider can be extended to scrape artworks from additional categori
     │
     ├───enum
     │   └───options.py
-    │   
     │
-    └───spiders
-        │───__init__.py
-        └───artworks_spider.py
-```
+    ├───spiders
+    │   ├───__init__.py
+    │   └───artworks_spider.py 
+    │
+    └───util
+        └───spider_utils.py
+```   
         
 
 
@@ -110,7 +108,7 @@ pip install -r requirements.txt
 ### 🎮 Using artworks
 
 ```sh
-scrapy crawl trial
+scrapy crawl artworks
 ```
 
 ---
