@@ -1,8 +1,9 @@
 import re
 from typing import Dict, Union, List
 import scrapy
-from ..items import ArtItem
+
 from ..enum.options import Options
+from ..items import ArtItem
 
 
 class TrialSpider(scrapy.Spider):
