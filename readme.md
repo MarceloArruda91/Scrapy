@@ -76,7 +76,7 @@ Structured Output: The scraped data is structured and saved in a JSON file named
     │   └───artworks_spider.py 
     │
     └───util
-        └───Extract.py
+        └───extract.py
 ```
 
 ## 🚀 Getting Started
