@@ -22,8 +22,8 @@ class ArtItem(scrapy.Item):
     description = scrapy.Field()
     image = scrapy.Field()
     url = scrapy.Field()
-    height = scrapy.Field()
     width = scrapy.Field()
+    height = scrapy.Field()
     categories = scrapy.Field()
 
     def to_dict(

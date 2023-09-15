@@ -72,7 +72,7 @@ class Extract:
             )
 
             if len(values) > 1:
-                return {"height": float(values[0]), "width": float(values[2])}
+                return {"width": float(values[0]), "height": float(values[2])}
         else:
             return None
 

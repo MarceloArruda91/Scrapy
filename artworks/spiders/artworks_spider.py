@@ -127,8 +127,8 @@ class TrialSpider(scrapy.Spider):
 
         dimensions_dict = Extract.extract_dimensions(response=response)
         if dimensions_dict:
-            item["height"] = dimensions_dict["height"]
             item["width"] = dimensions_dict["width"]
+            item["height"] = dimensions_dict["height"]
 
         item["categories"] = categories
         return item
