@@ -35,7 +35,8 @@ class Extract:
             filtered_artists = [
                 artist
                 for artist in artist_list
-                if not artist.upper().startswith("AFTER")
+                if not (artist.upper().startswith("AFTER"))
+                and (artist.upper() != "N/E")
             ]
 
             return filtered_artists
