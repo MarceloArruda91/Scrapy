@@ -1,7 +1,8 @@
 from typing import List
 import scrapy
 from ..items import ArtItem
-from ..util.spider_utils import SpiderUtils
+from ..util.extract import Extract
+from ..enum.options import Options
 
 
 class TrialSpider(scrapy.Spider):
@@ -19,7 +20,6 @@ class TrialSpider(scrapy.Spider):
         Initialize the spider and set up utility functions.
         """
         super().__init__()
-        self.spider_utils = SpiderUtils()
 
     def parse(
         self, response: scrapy.http.Response, categories: List[str] = []
@@ -39,7 +39,8 @@ class TrialSpider(scrapy.Spider):
             anchors = subcat.xpath(".//a[h3]")
             for anchor in anchors:
                 subcat_text = anchor.css("::text").get()
-                if self.spider_utils.verify_category(categories, subcat_text):
+
+                if subcat_text in Options.categories or categories:
                     temp_list = categories.copy()
                     temp_list.append(subcat_text)
                     yield response.follow(
@@ -106,17 +107,15 @@ class TrialSpider(scrapy.Spider):
         """
         item = ArtItem()
 
-        artist = self.spider_utils.extract_artist(response=response)
+        artist = Extract.extract_artist(response=response)
         if artist:
             item["artist"] = artist
 
-        title = self.spider_utils.extract_title(response=response)
+        title = Extract.extract_title(response=response)
         if title["title"]:
             item["title"] = title["title"]
 
-        description = self.spider_utils.extract_description(
-            response=response, title=title
-        )
+        description = Extract.extract_description(response=response, title=title)
         if description:
             item["description"] = description
 
@@ -126,7 +125,7 @@ class TrialSpider(scrapy.Spider):
 
         item["url"] = response.url
 
-        dimensions_dict = self.spider_utils.extract_dimensions(response=response)
+        dimensions_dict = Extract.extract_dimensions(response=response)
         if dimensions_dict:
             item["height"] = dimensions_dict["height"]
             item["width"] = dimensions_dict["width"]

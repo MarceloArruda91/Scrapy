@@ -2,10 +2,9 @@ import re
 from typing import Dict, List, Union
 
 import scrapy
-from ..enum.options import Options
 
 
-class SpiderUtils:
+class Extract:
     @staticmethod
     def extract_with_css(response: scrapy.http.Response, query: str) -> str:
         """
@@ -17,29 +16,15 @@ class SpiderUtils:
         """
         return response.css(query).get(default="").strip()
 
-    @staticmethod
-    def verify_category(categories: List[str], subcat_text: str) -> bool:
-        """
-        Verify if a given subcategory text is in the list of categories.
-
-        :param categories: List of categories.
-        :param subcat_text: Subcategory text to be verified.
-        :return: True if subcat_text is in categories or if categories is not empty, else False.
-        """
-        if subcat_text in Options.categories:
-            return True
-        if categories:
-            return True
-        return False
-
-    def extract_artist(self, response: scrapy.http.Response) -> List[str]:
+    @classmethod
+    def extract_artist(cls, response: scrapy.http.Response) -> List[str]:
         """
         Extract artist information from the response.
 
         :param response: The Scrapy response object.
         :return: List of extracted artist names.
         """
-        artist_text = self.extract_with_css(response=response, query="h2::text")
+        artist_text = cls.extract_with_css(response=response, query="h2::text")
         if artist_text:
             artist = [artist.strip() for artist in artist_text.split(";")]
             artist_list = [
@@ -91,8 +76,9 @@ class SpiderUtils:
         else:
             return None
 
+    @classmethod
     def extract_title(
-        self, response: scrapy.http.Response
+        cls, response: scrapy.http.Response
     ) -> Union[Dict[str, Union[str, None]]]:
         """
         Extract artwork title and description from the response.
@@ -100,7 +86,7 @@ class SpiderUtils:
         :param response: The Scrapy response object.
         :return: A dictionary with 'title' and 'description' keys, where values are strings or None.
         """
-        art_title = self.extract_with_css(response=response, query="h1::text")
+        art_title = cls.extract_with_css(response=response, query="h1::text")
 
         title = re.sub(r"^untitled\s*,*", "", art_title, flags=re.IGNORECASE)
 
@@ -114,7 +100,8 @@ class SpiderUtils:
         else:
             return {"title": clean_text, "description": None}
 
-    def extract_description(self, response, title):
+    @classmethod
+    def extract_description(cls, response, title):
         """
         Extract artwork description from the response.
 
@@ -122,7 +109,7 @@ class SpiderUtils:
         :param title: A dictionary with 'title' and 'description' keys.
         :return: A string containing the artwork description.
         """
-        description = self.extract_with_css(response, "p::text")
+        description = cls.extract_with_css(response, "p::text")
 
         if description and title["description"]:
             return description + ", " + title["description"]

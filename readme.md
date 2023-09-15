@@ -59,6 +59,7 @@ Structured Output: The scraped data is structured and saved in a JSON file named
 ```
 │───items_artworks.json
 │───log.txt
+│───requirements.txt
 │───scrapy.cfg
 └───artworks
     │───items.py
@@ -75,7 +76,7 @@ Structured Output: The scraped data is structured and saved in a JSON file named
     │   └───artworks_spider.py 
     │
     └───util
-        └───spider_utils.py
+        └───Extract.py
 ```
 
 ## 🚀 Getting Started
@@ -84,6 +85,7 @@ Structured Output: The scraped data is structured and saved in a JSON file named
 
 Before you begin, ensure that you have the following prerequisites installed:
 > - `Python 3.11`
+> - `Scrapy 2.9.0`
 
 
 ### 📦 Installation
