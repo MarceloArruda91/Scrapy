@@ -26,5 +26,5 @@
 2023-09-14 17:00 - Created the README
 2023-09-14 17:00 - Stopped coding
 
-2023-09-15 00:00 - Performed additional code testing
-2023-09-1 - Submitted the code
+2023-09-15 14:00 - Performed additional code testing
+2023-09-1  15:00 - Delivered the code

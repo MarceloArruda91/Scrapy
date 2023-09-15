@@ -1,6 +1,7 @@
 Assumptions for the Challenge
 
-The spider's crawling process is limited to the h3 categories exclusively.
+Had to downgrade Twisted to 22.10.0 because I was getting this error:
+AttributeError: 'AsyncioSelectorReactor' object has no attribute '_handleSignals'
 
 To streamline the iteration process, I employed a recursive function, given the uniform structure of all pages.
 
