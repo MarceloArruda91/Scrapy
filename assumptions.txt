@@ -1,0 +1,26 @@
+Assumptions for the Challenge
+
+Had to downgrade Twisted to 22.10.0 because I was getting this error:
+AttributeError: 'AsyncioSelectorReactor' object has no attribute '_handleSignals'
+
+To streamline the iteration process, I employed a recursive function, given the uniform structure of all pages.
+
+
+
+Data Treatment:
+
+Artist:
+Extracted artists' names while omitting their specific artist type.
+Removed the "after some artist" portion from the Artist field when present.
+
+Title:
+Excluded titles marked as "untitled."
+If a title started with "untitled" and had additional text, I removed the "untitled" part.
+Any remaining text enclosed in brackets or curly brackets was appended to the description and not fill the Title.
+
+Dimensions:
+Extracted the first occurrence of dimensions in centimeters, typically representing image/sight/plate dimensions.
+For cases with a single centimeter value, I returned None and left the field unfilled.
+
+Description:
+When the title was identified as a description, I appended it.

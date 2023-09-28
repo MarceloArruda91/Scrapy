@@ -1,0 +1,30 @@
+2023-09-08 10:30 - First Interview
+
+2023-09-10 17:00 - Started studying Scrapy documentation
+2023-09-10 21:00 - Finished studying
+
+2023-09-11 14:00 - Started the challenge
+2023-09-11 14:00 - Read the challenge and began designing the project
+2023-09-11 15:00 - Started coding the category iteration function
+2023-09-11 17:00 - Completed the first function and began coding the page iteration function
+2023-09-11 17:00 - Stopped coding
+
+2023-09-12 13:00 - Completed the page iteration function
+2023-09-12 14:00 - Analyzed the required data
+2023-09-12 14:30 - Started coding the data extraction function for art pages
+2023-09-12 15:30 - Ran the code, analyzed extracted data, and iteratively fixed issues
+2023-09-12 17:00 - Stopped coding
+
+2023-09-13 14:30 - Created the item class
+2023-09-13 14:30 - Moved data processing functions to a separate class
+2023-09-13 15:00 - Ran the code, analyzed extracted data, and iteratively fixed issues again
+2023-09-13 18:30 - Stopped coding
+
+2023-09-14 14:00 - Started code cleanup
+2023-09-14 15:00 - Fixed type hints
+2023-09-14 17:00 - Implemented docstrings
+2023-09-14 17:00 - Created the README
+2023-09-14 17:00 - Stopped coding
+
+2023-09-15 14:00 - Performed additional code testing
+2023-09-1  15:00 - Delivered the code
