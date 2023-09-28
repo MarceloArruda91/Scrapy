@@ -1,7 +1,7 @@
 <div align="center">
 <h1 align="center">
 
-<br>Zyte Challenge
+<br>Automation Challenge
 </h1>
 <h3>◦ Developed with the software and tools listed below.</h3>
 
